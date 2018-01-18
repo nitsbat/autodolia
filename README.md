@@ -126,9 +126,92 @@ Analysis are same as that of above analysis observed. Bar chart with facets win 
 
 ![rplot04](https://user-images.githubusercontent.com/22686274/35114252-2251e9bc-fcaa-11e7-9991-77d42245bce4.png)
 
-The only observation different from the bar facets are it shows the days when the demonetisation period was there or minimum number of transaction takes place. The increasing order of withdrawal is Sunday < Friday < Tuesday < Thursday < Monday < Saturday == Wednesday , and clearly the demonetisation was forced upon sunday. 
+* The only observation different from the bar facets are it shows the days when the demonetisation period was there or minimum number of transaction takes place. The increasing order of withdrawal is Sunday < Friday < Tuesday < Thursday < Monday < Saturday == Wednesday , and clearly the demonetisation was forced upon sunday. 
 
-       
+* The next visualisation is on the scatter plot which is very useful for implementing the machine algorithms. Scatter plot is basically placing a point which describes the y-axis value on a particular x-axis value. The scatter plot is done on the number of cub cards withdraw and amount withdrawn from the cub card only. the command for creating a scatter plot is :
+
+       > p <- ggplot(atm,aes(x=no_of_cub_card_withdrawals,y=amount_withdrawn_cub_card,color = atm_name))
+       > p <- p + geom_point(aes(color=atm_name,shape=atm_name)) # geom_point is used for plotting a point.
+
+_if the field name(atm_name) is small or abbreviated then we can also use_
+                   
+       > p + geom_text(aes(label=atm_name),size=1);
+
+![lr11](https://user-images.githubusercontent.com/22686274/35114728-bd4bc806-fcab-11e7-987f-b56717b8dfde.png)
+
+Analysis Observed :
+1. It is obvious that as the amount of cub card is more withdrawn the cash transcation from cub card becomes more.
+2. Nos of card withdrawals as well as total amount withdrawn are both maximum from KK Nagar ATM
+
+### Linear Regression
+
+* Now let us apply the linear regression in this graph using lm() function. lm() will take a relation which in our case will be amount_withdrawn_cub_card ~ no_of_cub_card_withdrawals. We will take the x and y values differently so that we will not face problem while predicting the data. The below code will scatter plot the above scenario but with regression line in black color.
+
+       > x <- atm$no_of_cub_card_withdrawals
+       > y <- atm$amount_withdrawn_cub_card 
+       > relation <- lm(y ~ x)
+       > summary(relation) # to know about other factors affecting the graph.
+       > p <- p + geom_line(aes(y=predict(relation)),color="black") # to show the regression line through graph
+
+
+![lr1](https://user-images.githubusercontent.com/22686274/35116430-703360aa-fcb1-11e7-8f1d-1f58f8b753a0.png)
+
+Now for predicting the data we will use this regression line. Suppose we have to predict that what will be the total amount withdraw from cub card when the number of withdrawal is 345. The actual amount withdraw from cub card when card withdrawal is 345 was 1662290. You can check the actual value of amount withdraw by following code :
+
+       > k = subset(atm,no_of_cub_card_withdrawals==345)
+       > k = k$amount_withdrawn_cub_card # it equals to 1662290
+      
+Now lets predict the same result by using the linear regression. We will make dataframe with same frames. The below small snippet will give you the following result :-
+   
+     > l <- data.frame(x <- 345)
+     > k <- predict(relation,l)# now k is equal to 1675879
+
+Result came out to be 1675879 which is 8% margin. Therefore now we will apply multiple regression which contains more dependent variable for a particular condition.
+
+### Multiple regression
+
+Multiple Regression is used for analyzing the relationship between several independent or predictor variables and a dependent or criterion variable. 
+In our scenario the several independent variables are number of cub card withdrawals and number of other card withdrawals. The dependent or criterion variable will be the total amount withdrawn on that day. In the end we will predict the total amount withdrawn by putting the values of cub cards and other cards in the multiple regression equation.
+We will first create a data frame with factors containing cub card withdrawals , other card withdrawals and total amount withdrawan from the atm. Then we will form a relation between the factors using lm() function which will be : 
+  __formula = total_amount_withdrawn ~ no_of_cub_card_withdrawals +  no_of_other_card_withdrawals__
  
+With this relation we will get the coefficients as well slopes for different factors. The following code will store the coefficients and slopes on variables a,xCubCard and xOther_card.
 
+     > mult <- tmp[,c("no_of_cub_card_withdrawals","no_of_other_card_withdrawals","total_amount_withdrawn")]
+     > relation <- lm(data=mult,total_amount_withdrawn ~ no_of_cub_card_withdrawals + no_of_other_card_withdrawals) #applying multiple regressio and then creating an equation
+     print(relation)
+
+The result of print(relation) will be  
+`Call:
+lm(formula = total_amount_withdrawn ~ no_of_cub_card_withdrawals + 
+        no_of_other_card_withdrawals, data = mult)
+ 
+ Coefficients:
+   (Intercept)    no_of_cub_card_withdrawals  
+ -14002                          5171  
+ no_of_other_card_withdrawals  
+ 3351 
+`
+__We will now store the intercepts and slope in particular variables.__
+          
+     > a <- coef(relation)[1]
+     > xCub_card <- coef(relation)[2]
+     > xOther_card <- coef(relation)[3]
+
+ 
+ Forming a multiple regression equation :- 
+    
+    > Y <- a + xCub_card*x1 + xOther_card*x2
+    
+Let us now predict the result when number of cub card withdrawal = 27 and number of other card withdrawal = 52. The amount withdrawan comes out to be 305100. Now lets check it by multiple regression by following command :
+
+    > x1 <- 27
+    > x2 <- 52
+    > Y <- a + xCub_card*x1 + xOther_card*x2 
+    > Y
+     (Intercept) 
+     299879.2 
+     
+Hence the difference between the actual and observed value is quite less. 
+At last just share whatever predictions and visualisation you can do by the given dataset. Eventually we will be able to get the more accurate results. :+1:
     
