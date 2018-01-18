@@ -10,10 +10,11 @@ Our objective is to first visualise and then analyze the data. Based on our anal
       > library(ggplot2) #this command is used to load the package if already installed
  #### PostgreSQL - https://www.postgresql.org/download/windows/     
  
- __All the same codes below are present in different R scripts__
+ __All the same codes below are present in different R scripts. You can directly run the code from console by command :__
+      >> Rscript visual1.R
  
  ## Introduction
- The dataset in which we are performing the data analytics is a data-set provided by City Union Bank. It consists of all the ATM Transaction done by City Union bank and other banks from '1/1/2011' to '9/29/2017' at following five atm places.
+ The dataset in which we are performing the data analysis is a data-set provided by City Union Bank. It consists of all the ATM Transactions done by City Union bank and other banks from '1/1/2011' to '9/29/2017' at following five atm places.
  * Big Street ATM
  * Mount Road ATM
  * Airport ATM
@@ -23,17 +24,17 @@ Our objective is to first visualise and then analyze the data. Based on our anal
 The dataset file is available at both .csv format and .sql format. Download the atmdata.csv or bro.sql file. Before visualising the data, we will clean the data by storing it in database i.e. Postgres in our case. Loading of data in database is already described by me in my repository https://github.com/nits2016/Data_Analytics.
 Let's begin with the visualisation :
 
-__I will assume that you have downloaded the file and save it in Desktop__
+__All the files should be downloaded and saved in Desktop__
 
 * Open the RStudio and load the .csv file. There are two ways to load the data in RStudio 
-** First is to directly set the working directory and store in our desired dataframe by following command :
+1. First is to directly set the working directory and store in our desired dataframe by following command :
 
    `> setwd("C:/Users/nits/Desktop") #set a new working directory where the sample file is downloaded `   
    `> data <- read.csv('atmdata.csv')`
    
    `> atm <- data ;`
    
-* The second way to load the data is to load the data from database which is Postgres in our case. For loading the data from Postgres we must install the "RPostgreSQL" package. (different database have different packages e.g. RevoScaleR for mySQL).
+2. The second way to load the data is to load the data from database which is Postgres in our case. For loading the data from Postgres we must install the "RPostgreSQL" package. (different database have different packages e.g. RevoScaleR for mySQL).
 Following command will load the data in "tmp" dataframe
 
 
@@ -67,7 +68,7 @@ Following command will load the data in "tmp" dataframe
  ![rplot02](https://user-images.githubusercontent.com/22686274/35112030-c7d5f282-fca2-11e7-8b24-251489cb959f.png)
  ###### It is recommended to visualise the pic by downloading the original one from the repository.
  
- __Similarly the code for bar graph between the transaction date and total number of atm card withdraws are :__
+ __Similarly the code for bar graph between the transaction date and total number of atm card withdraws is :__
  
        > p1 <- ggplot(atm,aes(x=DateOfTrans,y=no_of_withdrawals,fill=atm_name)) 
        > p1 <- p1 + geom_bar(stat="identity") + scale_x_date(date_labels="%d-%b-%y",date_breaks = "4 month")
@@ -78,7 +79,7 @@ Following command will load the data in "tmp" dataframe
 Analysis Observed :- 
 1. It is clearly observed from the graphs that from date between Oct-2016 to jan-2016 , there is no cards and cash withdrawals. The bar graph at that series of points tends to almost zero. The only reason is the ___2016 Indian banknote demonetisation___ .
 2. One can figured out that the amount of transaction or cash withdrawal is maximum from KK Nagar ATM. Filling duration or capacity of cash needs to be increased therefore in KK Nagar ATM. 
-3. It can be also seen that the card withdrawals and atm transaction is maximum on month October of every year. One possible reason might be the more number of holidays as comared to any other month.
+3. It can be also seen that the card withdrawals and atm transaction is maximum on month October of every year. One possible reason might be the more number of holidays as compared to any other month.
 
 * The next visualisation is based on our usage of facets. Facets are very useful in splitting the data according to some field. Here we will observe the no of card withdrawals on the basis of weekdays i.e Sunday,Monday,etc. The following code will help to create the facet:
 
@@ -104,7 +105,7 @@ Analysis Observed :
 1. Here is an interesting observation that the transaction is maximum on saturday and wednesday instead of Sunday and Monday. It is probably due to the starting weekend course of a new week.
 2. The amount withdrawn is much more from Christ College ATM. Another visualisation one can made is the sudden increase of cash withdrawn on saturday from Christ College ATM. The reason may be the more amount of withdrawals from students as students take cash for the weekend.
 
-* The above two plots can be also visualised through pie chart. One of the main problem occurs with the pie charts are they take too long to load/create , hence the following example is reduced to minimum number of instruction so that pie chart will not take too long to load. The command for creating a pie chart based on the atm name and amount withdrawal is :
+* The above two plots can be also visualised through pie chart. One of the main problem occurs with the pie charts is that they take more time in loading/creation , hence the following example is reduced to minimum number of instruction so that pie chart will not take too long to load. The command for creating a pie chart based on the atm name and amount withdrawal is :
 
        > tmp = subset(atm, weekday == "Sunday") #509 entries only
        > pc <- data.frame(atmName = tmp$atm_name, amount = tmp$total_amount_withdrawn )
@@ -126,9 +127,9 @@ Analysis are same as that of above analysis observed. Bar chart with facets win 
 
 ![rplot04](https://user-images.githubusercontent.com/22686274/35114252-2251e9bc-fcaa-11e7-9991-77d42245bce4.png)
 
-* The only observation different from the bar facets are it shows the days when the demonetisation period was there or minimum number of transaction takes place. The increasing order of withdrawal is Sunday < Friday < Tuesday < Thursday < Monday < Saturday == Wednesday , and clearly the demonetisation was forced upon sunday. 
+* The only observation different from the bar facets are :- it shows the days when the demonetisation period was there or minimum number of transaction takes place. The increasing order of withdrawal is Sunday < Friday < Tuesday < Thursday < Monday < Saturday == Wednesday , and clearly the demonetisation was forced upon sunday. 
 
-* The next visualisation is on the scatter plot which is very useful for implementing the machine algorithms. Scatter plot is basically placing a point which describes the y-axis value on a particular x-axis value. The scatter plot is done on the number of cub cards withdraw and amount withdrawn from the cub card only. the command for creating a scatter plot is :
+* The next visualisation is on the scatter plot which is very useful for implementing the machine algorithms. Scatter plot is basically placing a point which describes the y-axis value on a particular x-axis value. The scatter plot is done on the number of cub cards withdraw and amount withdrawn from the cub card only. the command for creating a scatter plot is 
 
        > p <- ggplot(atm,aes(x=no_of_cub_card_withdrawals,y=amount_withdrawn_cub_card,color = atm_name))
        > p <- p + geom_point(aes(color=atm_name,shape=atm_name)) # geom_point is used for plotting a point.
@@ -156,7 +157,7 @@ Analysis Observed :
 
 ![lr1](https://user-images.githubusercontent.com/22686274/35116430-703360aa-fcb1-11e7-8f1d-1f58f8b753a0.png)
 
-Now for predicting the data we will use this regression line. Suppose we have to predict that what will be the total amount withdraw from cub card when the number of withdrawal is 345. The actual amount withdraw from cub card when card withdrawal is 345 was 1662290. You can check the actual value of amount withdraw by following code :
+Now for predicting the data we will use this regression line. Suppose we have to predict that what will be the total amount withdraw from cub card when the number of withdrawal is 345. The actual amount withdraw from cub card when card withdrawal is 345 was 1662290. You can check the actual value of amount withdraw by the following code :
 
        > k = subset(atm,no_of_cub_card_withdrawals==345)
        > k = k$amount_withdrawn_cub_card # it equals to 1662290
@@ -173,6 +174,7 @@ Result came out to be 1675879 which is 8% margin. Therefore now we will apply mu
 Multiple Regression is used for analyzing the relationship between several independent or predictor variables and a dependent or criterion variable. 
 In our scenario the several independent variables are number of cub card withdrawals and number of other card withdrawals. The dependent or criterion variable will be the total amount withdrawn on that day. In the end we will predict the total amount withdrawn by putting the values of cub cards and other cards in the multiple regression equation.
 We will first create a data frame with factors containing cub card withdrawals , other card withdrawals and total amount withdrawan from the atm. Then we will form a relation between the factors using lm() function which will be : 
+
   __formula = total_amount_withdrawn ~ no_of_cub_card_withdrawals +  no_of_other_card_withdrawals__
  
 With this relation we will get the coefficients as well slopes for different factors. The following code will store the coefficients and slopes on variables a,xCubCard and xOther_card.
@@ -182,16 +184,21 @@ With this relation we will get the coefficients as well slopes for different fac
      print(relation)
 
 The result of print(relation) will be  
-`Call:
-lm(formula = total_amount_withdrawn ~ no_of_cub_card_withdrawals + 
-        no_of_other_card_withdrawals, data = mult)
+`Call:`
+
+`lm(formula = total_amount_withdrawn ~ no_of_cub_card_withdrawals + 
+         no_of_other_card_withdrawals, data = mult)`
+
+ `Coefficients:`
  
- Coefficients:
-   (Intercept)    no_of_cub_card_withdrawals  
- -14002                          5171  
- no_of_other_card_withdrawals  
- 3351 
-`
+   `(Intercept)    no_of_cub_card_withdrawals` 
+   
+   `-14002                          5171`  
+
+ `no_of_other_card_withdrawals`
+ 
+  `3351`
+
 __We will now store the intercepts and slope in particular variables.__
           
      > a <- coef(relation)[1]
@@ -199,7 +206,7 @@ __We will now store the intercepts and slope in particular variables.__
      > xOther_card <- coef(relation)[3]
 
  
- Forming a multiple regression equation :- 
+ Form a multiple regression equation by :- 
     
     > Y <- a + xCub_card*x1 + xOther_card*x2
     
@@ -215,3 +222,5 @@ Let us now predict the result when number of cub card withdrawal = 27 and number
 Hence the difference between the actual and observed value is quite less. 
 At last just share whatever predictions and visualisation you can do by the given dataset. Eventually we will be able to get the more accurate results. :+1:
     
+---------
+#                THANK YOU :v: :raising_hand:
