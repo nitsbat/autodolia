@@ -89,11 +89,11 @@ Analysis Observed :-
        
 ![rplotbar](https://user-images.githubusercontent.com/22686274/35113015-091d7a96-fca6-11e7-841a-e1769ae5c073.png)
 
-Analysis Observed :- 
+OBSERVATIONS :- 
 1. Obviously On sundays the amount of withdrawals are more because of holiday.
 2. *KK Nagar ATM* still has the maximum number of withdrawals on almost all days due to its dense population.
 
- __Similarly the code for facet on the total amount withdrawn based on weekdays is :__
+ :metal: __Similarly the code for facet on the total amount withdrawn based on weekdays is :__
  
        > p <- ggplot(atm,aes(x="factors",y=total_amount_withdrawn,fill=atm_name))
        > p = p + geom_bar(stat = "identity" )
@@ -101,7 +101,7 @@ Analysis Observed :-
  
  ![dhasu](https://user-images.githubusercontent.com/22686274/35113282-e6a32b90-fca6-11e7-800c-bbd032d5c458.png)
 
-Analysis Observed :
+OBSERVATIONS :
 1. Here is an interesting observation that the transaction is maximum on saturday and wednesday instead of Sunday and Monday. It is probably due to the starting weekend course of a new week.
 2. The amount withdrawn is much more from Christ College ATM. Another visualisation one can made is the sudden increase of cash withdrawn on saturday from Christ College ATM. The reason may be the more amount of withdrawals from students as students take cash for the weekend.
 
@@ -124,6 +124,8 @@ Analysis are same as that of above analysis observed. Bar chart with facets win 
       > pl <- pl + facet_grid(facets = ~ weekday )
       > pl <- pl + coord_polar(theta="y")
       > pl <- pl + scale_fill_brewer(palette = "Dark2") + theme(axis.text.x = element_blank(),axis.text.y = element_blank())
+  
+:smile: __The above four codes are present in visual1.R__
 
 ![rplot04](https://user-images.githubusercontent.com/22686274/35114252-2251e9bc-fcaa-11e7-9991-77d42245bce4.png)
 
@@ -140,7 +142,7 @@ _if the field name(atm_name) is small or abbreviated then we can also use_
 
 ![lr11](https://user-images.githubusercontent.com/22686274/35114728-bd4bc806-fcab-11e7-987f-b56717b8dfde.png)
 
-Analysis Observed :
+OBSERVATIONS :
 1. It is obvious that as the amount of cub card is more withdrawn the cash transcation from cub card becomes more.
 2. Nos of card withdrawals as well as total amount withdrawn are both maximum from KK Nagar ATM
 
@@ -168,6 +170,8 @@ Now lets predict the same result by using the linear regression. We will make da
      > k <- predict(relation,l)# now k is equal to 1675879
 
 Result came out to be 1675879 which is 8% margin. Therefore now we will apply multiple regression which contains more dependent variable for a particular condition.
+
+:metal: __Code for Scatter plot and Linear Regression is present in ScatterAndLinear.R script__
 
 ### Multiple regression
 
@@ -221,6 +225,8 @@ Let us now predict the result when number of cub card withdrawal = 27 and number
      
 Hence the difference between the actual and observed value is quite less. 
 At last just share whatever predictions and visualisation you can do by the given dataset. Eventually we will be able to get the more accurate results. :+1:
-    
+
+:metal: *Code for Multiple regression is present MultipleRegression.r
+
 ---------
 #                THANK YOU :v: :raising_hand:
